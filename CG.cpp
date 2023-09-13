@@ -1,66 +1,61 @@
 #include <iostream>
 #include <vector>
 
-class Aresta;
-class Vertice;
+using namespace std;
+
+class Edge;
+class Vertex;
 class Face;
 
-class Aresta{
+class Edge{
     public:
 
-    Vertice *Ini, *Fim;
-    Face *Esq, *Dir;
-    Aresta *EsqPre, *EsqSuc, *DirPre, *DirSuc;
+    Vertex *Ini, *End;
+    Face *Left, *Right;
+    Edge *LeftPre, *LeftSuc, *RightPre, *RightSuc;
 
-    void setVertice(Vertice* Ini, Vertice* Fim){
+    void setVertex(Vertex* Ini, Vertex* End){
         this->Ini = Ini;
-        this->Fim = Fim;
+        this->End = End;
     }
 
-    void setFace(Face* Ini, Face* Fim){
-        this->Esq = Ini;
-        this->Dir = Fim;
+    void setFace(Face* Ini, Face* End){
+        this->Left = Ini;
+        this->Right = End;
     }
 
-    void setAresta(Aresta* EsqPre, Aresta* EsqSuc, Aresta* DirPre, Aresta* DirSuc){
-        this->EsqPre = EsqPre;
-        this->EsqSuc = EsqSuc;
-        this->DirPre = DirPre;
-        this->DirSuc = DirSuc;
+    void setEdge(Edge* LeftPre, Edge* LeftSuc, Edge* RightPre, Edge* RightSuc){
+        this->LeftPre = LeftPre;
+        this->LeftSuc = LeftSuc;
+        this->RightPre = RightPre;
+        this->RightSuc = RightSuc;
     }
 };
 
-class Vertice{
+class Vertex{
     public:
-
-    std::vector<float> coords;
-    Aresta *ArestaIncidente;
+    vector<float> coords;
+    Edge *EdgeIncident;
 };
 
 class Face{
     public:
 
-    Aresta *ArestaFace;
+    Edge *EdgeFace;
 };
 
 int main(int argc, char** argv){
-    FILE *obj;
-    obj = fopen(argv[1], "rb");
+    FILE *ObjFile;
+    ObjFile = fopen(argv[1], "rb");
 
-    char Linha[20];
-    char* Resultado;
+    int AmountLines = 0;
 
-    while(!feof(obj)){
-        fgets(Linha, 100, obj);
-
-        char Comando[2];
-
-        Comando [0] = Linha[0];
-        Comando [1] = Linha[1];
-        std::cout << Comando << std::endl;
+    while(!feof(ObjFile)){
+        cout << AmountLines << endl;
+        AmountLines += 1;        
     }
  
-    fclose(obj);
+    fclose(ObjFile);
 
     return 0;
 }
