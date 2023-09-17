@@ -2,226 +2,13 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <unistd.h>
+#include <cstdlib> 
+#include "ClassesWingedEdge.h"
 
-class Edge;
-class Vertex;
-class Face;
-
-std::vector<Vertex*> ListVertex;
-std::vector<Edge*> ListEdge;
-std::vector<Face*> ListFace;
-
-int EdgeValue = 1, VertexValue = 1, FaceValue = 1;
-
-class Edge{
-private:
-    int id;
-    Vertex *Ini = nullptr, *End = nullptr;
-    Face *Left = nullptr;
-    Face *Right = nullptr;
-    Edge *LeftPre = nullptr, *LeftSuc = nullptr, *RightPre = nullptr, *RightSuc = nullptr;
-
-public:
-    Edge(int id){
-        this->id = id;
-        EdgeValue++;
-    }
-
-    void setVertex(Vertex* Ini, Vertex* End){
-        this->Ini = Ini;
-        this->End = End;
-    }
-
-    void setFaceLeft(Face* Left){
-        this->Left = Left;
-    }
-
-    void setFaceRight(Face* Right){
-        this->Right = Right;
-    }
-
-    void setLeftPre(Edge* LeftPre){
-        this->LeftPre = LeftPre;
-    }
-    void setLeftSuc(Edge* LeftSuc){
-        this->LeftSuc = LeftSuc;
-    }
-    void setRightPre(Edge* RightPre){
-        this->RightPre = RightPre;
-    }
-    void setRightSuc(Edge* RightSuc){
-        this->RightSuc = RightSuc;
-    }
-
-    Vertex* getVertexIni(){
-        return this->Ini;
-    }
-
-    Vertex* getVertexEnd(){
-        return this->End;
-    }
-
-    Face* getFaceLeft(){
-        return this->Left;
-    }
-
-    Face* getFaceRight(){
-        return this->Right;
-    }
-
-    Edge* getLeftPre(){
-        return this->LeftPre;
-    }
-
-    Edge* getLeftSuc(){
-        return this->LeftSuc;
-    }
-
-    Edge* getRightPre(){
-        return this->RightPre;
-    }
-
-    Edge* getRightSuc(){
-        return this->RightSuc;
-    }
-
-    int getId(){
-        return this->id;
-    }
-
-    void ShowInformations();
-};
-
-class Vertex{
-    private:
-    int id;
-    std::vector<float> Coord;
-    Edge *EdgeIncident = nullptr;
-
-    public:    
-    Vertex(int id, float x, float y, float z) : Coord(3){
-        this->id = id;
-        this->Coord[0] = x;
-        this->Coord[1] = y;
-        this->Coord[2] = z;
-        VertexValue++;
-    }
-
-    void setEdgeIncident(Edge* EdgeIncident){
-        this->EdgeIncident = EdgeIncident;
-    }
-
-    std::vector<float> getCoord(){
-        return this->Coord;
-    }
-
-    Edge* getEdgeIncident(){
-        return this->EdgeIncident;
-    }
-
-    int getId(){
-        return this->id;
-    }
-
-    void ShowInformations();
-};
-
-class Face{
-    private:
-    int id;
-    Edge* EdgeFace = nullptr;    
-
-    public:
-    Face(int id){
-        this->id = id;
-        FaceValue++;
-    }
-
-    void setEdgeFace(Edge* EdgeFace){
-        this->EdgeFace = EdgeFace;
-    }
-
-    Edge* getEdgeFace(){
-        return this->EdgeFace;
-    }
-
-    int getId(){
-        return this->id;
-    }
-
-    void ShowInformations();
-};
-
-void Edge::ShowInformations() {
-    std::cout << "E" << this->id << " / ";
-
-    if (this->Ini != nullptr) {
-        std::cout << "V" << this->Ini->getId() << " / ";
-    } else {
-        std::cout << "V-N/A" <<  " / ";
-    }
-
-    if (this->End != nullptr) {
-        std::cout << "V" << this->End->getId() << " / ";
-    } else {
-        std::cout << "V-N/A" <<  " / ";
-    }
-
-    if (this->Left != nullptr) {
-        std::cout << "F" << this->Left->getId() << " / ";
-    } else {
-        std::cout << "F-N/A" <<  " / ";
-    }
-
-    if (this->Right != nullptr) {
-        std::cout << "F" << this->Right->getId() << " / ";
-    } else {
-        std::cout << "F-N/A" <<  " / ";
-    }
-
-    if (this->LeftPre != nullptr) {
-        std::cout << "E" << this->LeftPre->getId() << " / ";
-    } else {
-        std::cout << "E-N/A" <<  " / ";
-    }
-
-    if (this->LeftSuc != nullptr) {
-        std::cout << "E" << this->LeftSuc->getId() << " / ";
-    } else {
-        std::cout << "E-N/A" <<  " / ";
-    }
-
-    if (this->RightPre != nullptr) {
-        std::cout << "E" << this->RightPre->getId() << " / ";
-    } else {
-        std::cout << "E-N/A" <<  " / ";
-    }
-
-    if (this->RightSuc != nullptr) {
-        std::cout << "E" << this->RightSuc->getId();
-    } else {
-        std::cout << "E-N/A";
-    }
-
-    std::cout << std::endl;
-}
-void Vertex::ShowInformations() {
-    std::cout << "V" << this->id << " / ";
-    if (this->EdgeIncident != nullptr) {
-        std::cout << "E" << this->EdgeIncident->getId() << std::endl;
-    } else {
-        std::cout << "E-N/A" << std::endl;
-    }
-}
-
-void Face::ShowInformations() {
-    std::cout << "F" << this->id << " / ";
-    if (this->EdgeFace != nullptr) {
-        std::cout << "E" << this->EdgeFace->getId() << std::endl;
-    } else {
-        std::cout << "E-N/A" << std::endl;
-    }
-}
+static std::vector<Vertex*> ListVertex;
+static std::vector<Edge*> ListEdge;
+static std::vector<Face*> ListFace;
 
 void ShowInformationsTotal(){
     std::cout << std::endl << "Edge Table" << std::endl;
@@ -247,7 +34,6 @@ void ShowInformationsTotal(){
     for(int i=0; i<ListFace.size(); i++){
         ListFace[i]->ShowInformations();
     }
-    std::cout << std::endl;
 }
 
 Edge* is_EdgeAlreadyCreated(Vertex *A, Vertex*B){
@@ -278,15 +64,15 @@ void CreateWingedEdge(char* file){
         std::string Command;
         LineStream >> Command;        
 
-        //Vertex command
+        //Vertice comando
         if (Command == "v"){
             float x, y, z;
             LineStream >> x >> y >> z;      
-            Vertex* V = new Vertex(VertexValue,x,y,z);     
+            Vertex* V = new Vertex(GlobalVariables::VertexValue,x,y,z);     
             ListVertex.push_back(V);
         }       
 
-        //Face command        
+        //Face comando      
         else if(Command == "f"){   
                   
             int vertex;
@@ -296,7 +82,7 @@ void CreateWingedEdge(char* file){
             LineStream.get(previousCharacter);            
         
             while (LineStream.get(Character)){
-                //Reading the vertices of the edges              
+                //Lendo os vértices de uma face              
                 if(Character != '/' and Character != ' '){
                     if(previousCharacter == ' '){                                       
                         vertex = Character - '0';
@@ -306,10 +92,10 @@ void CreateWingedEdge(char* file){
                 previousCharacter = Character;
             }
             
-            Face* F = new Face(FaceValue); 
+            Face* F = new Face(GlobalVariables::FaceValue); 
             ListFace.push_back(F); 
 
-            //Creating and adding edges to the list       
+            //Criando e adicionando arestas a lista     
 
             for(int i=0; i<FaceVertices.size(); i++){                
                 Vertex *VertexA, *VertexB; 
@@ -321,19 +107,19 @@ void CreateWingedEdge(char* file){
                     VertexB = ListVertex[FaceVertices[i+1]-1];  
                                               
 
-                //Check if the edge has already been created             
+                //Verificando se a aresta já foi criada         
                 Edge *E = is_EdgeAlreadyCreated(VertexA, VertexB);
 
                 if(E == nullptr){   
-                    //If not, create the object and determine the vertices     
-                    E = new Edge(EdgeValue);               
+                    //Se não, cria uma nova aresta com sua vértice inicial e final
+                    E = new Edge(GlobalVariables::EdgeValue);               
                     E->setVertex(VertexA, VertexB); 
                 
-                    //the final vertex will have this edge as an incident
+                    //o vértice final terá esta aresta como um incidente
                     if(VertexB->getEdgeIncident() == nullptr) 
                         VertexB->setEdgeIncident(E);
 
-                    //If the edge did not exist before, the left face will be the one created
+                    //Se a aresta não existia antes, a face esquerda será a criada
                     if(E->getFaceLeft() == nullptr){
                         E->setFaceLeft(F);
                     }
@@ -341,28 +127,28 @@ void CreateWingedEdge(char* file){
                     ListEdge.push_back(E);
                 }  
                 else{
-                    //If the edge already exists, the right face will be the one created
+                    //Se a aresta já existir, a face direita será a criada
                     if(E->getFaceRight() == nullptr){
                         E->setFaceRight(F);
                     }
                 }               
                 
-                //The created face will assign the first edge as its face edge
+                //A face criada atribuirá a primeira aresta como aresta da face
                 if(F->getEdgeFace() == nullptr)
                     F->setEdgeFace(E);                         
             }                 
         }              
 
-        //Vertex normal command (for the winged edge structure, there is no need)
+        //Comando da normal do vértice (para a estrutura winged-edge, não há necessidade)
         else if(Command == "vn"){}
-        //Vertex texture command (for the winged edge structure, there is no need)
+        //Comando de textura do vértice (para a estrutura winged-edge, não há necessidade)
         else if(Command == "vt"){}      
 
         else{
             continue;
         }
 
-        //Defining the left and right edges, preceding and succeeding
+        //Definindo as bordas esquerda e direita, precessora e sucessora
         for (int i = 0; i < ListEdge.size(); i++) {
             for (int j = 0; j < ListEdge.size(); j++) {
                 if (j != i) {
@@ -405,10 +191,111 @@ void CreateWingedEdge(char* file){
     File.close();
 }
 
+void QueryTheFaces_Edge(int Id){
+    if (Id > ListEdge.size()){
+        std::cout << "Nenhuma aresta corresponde a esse ID";
+        return;
+    }    
+    std::cout << "Faces que compartilham a aresta E" << Id << ':';
+    std::cout << ' ' << 'F' << ListEdge[Id-1]->getFaceLeft()->getId() << ' ' << 'F' << ListEdge[Id-1]->getFaceRight()->getId();
+}
+
+void QueryTheEdges_Vertex(int Id){
+    if (Id > ListVertex.size()){
+        std::cout << "Nenhum vértice corresponde a esse ID";
+        return;
+    }
+    std::cout << "Arestas que compartilham o vértice V" << Id << ':';
+    for (int i=0; i<ListEdge.size(); i++){        
+        if((ListEdge[i]->getVertexIni()->getId() == Id) or (ListEdge[i]->getVertexEnd()->getId() == Id)){
+            std::cout << ' ' << 'E' << ListEdge[i]->getId();
+        }
+    }
+}
+
+void QueryTheVertice_Face(int Id){
+    if (Id > ListFace.size()){
+        std::cout << "Nenhuma face corresponde a esse ID";
+        return;
+    }
+    std::vector<int> IdVerticesFace;
+    bool is_alreadyIdintheVector = false;
+
+    std::cout << "Vértices que compartilham a face F" << Id << ':';
+    for (int i=0; i<ListEdge.size(); i++){
+        if((ListEdge[i]->getFaceLeft()->getId() == Id) or (ListEdge[i]->getFaceRight()->getId() == Id)){
+            for(int j=0; j<IdVerticesFace.size(); j++){
+                if((ListEdge[i]->getVertexIni()->getId()) == IdVerticesFace[j])
+                    is_alreadyIdintheVector = true;
+            }
+            if (is_alreadyIdintheVector == false){
+                IdVerticesFace.push_back(ListEdge[i]->getVertexIni()->getId());
+            }
+            is_alreadyIdintheVector = false;
+
+            for(int j=0; j<IdVerticesFace.size(); j++){
+                if((ListEdge[i]->getVertexEnd()->getId()) == IdVerticesFace[j])
+                    is_alreadyIdintheVector = true;
+            }
+            if (is_alreadyIdintheVector == false){
+                IdVerticesFace.push_back(ListEdge[i]->getVertexEnd()->getId());
+            }
+            is_alreadyIdintheVector = false;
+        }
+    }
+
+    for(int i=0; i<IdVerticesFace.size(); i++){
+        std::cout << ' ' << 'V' << IdVerticesFace[i];
+    }
+}
+
 int main(int argc, char** argv){    
 
-    CreateWingedEdge(argv[1]);
-    ShowInformationsTotal();   
+    CreateWingedEdge(argv[1]);          
+
+    int Input = -1, Id;    
+
+    while(Input != 0){       
+
+        std::cout << std::endl << "----------------------------------------------------------------" << std::endl;
+        std::cout << "Seleciona uma operação:" << std::endl;
+        std::cout << "0 - Sair" << std::endl;
+        std::cout << "1 - Consultar as faces que compartilham um determinada aresta" << std::endl;
+        std::cout << "2 - Consultar as arestas que compartilham um determinado vértice" << std::endl;
+        std::cout << "3 - Consultar os vértices que compartilham uma determinada face" << std::endl;
+        std::cout << "4 - Mostrar a estrutura completa Winged-Edge" << std::endl << std::endl;
+
+        std::cin >> Input;        
+
+        usleep(1000000);
+        system("clear");
+        
+        switch(Input){
+            case 0:
+                break;
+            case 1:
+                std::cout << "Id da aresta: ";
+                std::cin >> Id;
+                QueryTheFaces_Edge(Id);
+                break;
+            case 2:
+                std::cout << "Id do vértice: ";
+                std::cin >> Id;
+                QueryTheEdges_Vertex(Id);
+                break;
+            case 3:
+                std::cout << "Id da face: ";
+                std::cin >> Id;
+                QueryTheVertice_Face(Id);
+                break;
+            case 4:
+                ShowInformationsTotal(); 
+                break;
+            default:
+                std::cout << "Comando inválido";
+        }
+        std::cout << std::endl;
+    }
 
     return 0;
 }
