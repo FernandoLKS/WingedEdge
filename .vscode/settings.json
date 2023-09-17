@@ -63,6 +63,7 @@
         "map": "cpp",
         "__split_buffer": "cpp",
         "__functional_base": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "__locale": "cpp"
     }
 }
